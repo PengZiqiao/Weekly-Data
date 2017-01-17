@@ -1,0 +1,82 @@
+﻿{% extends "bootstrap/base.html" %}
+
+{% block title %}周报数据部分{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        {# 网页标题 #}
+        <div class="page-header">
+            <h1>周报数据部分<small>Weekly Data</small></h1>
+        </div>
+
+        {# 住宅市场 #}
+        <h3>住宅市场</h3>
+        {% set detail = data['住宅'] %}
+        {# 图表用数据 #}
+        <blockquote>
+            {% for key in ['上市','认购','成交','均价'] %}
+                {{ key }}: <span class="badge">{{ detail[key][0] }}</span>&nbsp;&nbsp;
+            {% endfor %}
+        </blockquote>
+        {# 文字描述 #}
+        <p>
+            {% if detail['上市'][0]=="0.00" %}
+                南京楼市(不包含高淳和溧水)无上市；
+            {% else %}
+                南京楼市(不包含高淳和溧水)上市{{ detail['上市'][0] }}万㎡，环比{{ detail['上市'][1] }}%，
+                （供应特点，如新盘加推、板块特点等）；
+            {% endif %}
+        </p>
+        <p>
+            {% if detail['认购'][0]=="0.00" %}
+                南京楼市(不包含高淳和溧水)无认购，
+            {% else %}
+                南京楼市(不包含高淳和溧水)认购{{ detail['认购'][0] }}万㎡，环比{{ detail['认购'][1] }}%，
+            {% endif %}
+
+            {% if detail['成交'][0]=="0.00" %}
+                无成交；
+            {% else %}
+                成交{{ detail['成交'][0] }}万㎡，环比{{ detail['成交'][1] }}%；
+            {% endif %}
+        </p>
+        {% if detail['成交'][0]!="0.00" %}
+            <p>
+                成交均价{{ detail['均价'][0] }}元/㎡，环比{{ detail['均价'][1] }}%。
+                上周成交主要来自（排行榜成交面积前三）等项目。
+            </p>
+        {% endif %}
+        <br>
+
+        {# 商业、办公、别墅市场 #}
+        {% for market in ['商业', '办公',  '别墅'] %}
+            {% set detail = data[market] %}
+            {# 市场名称 #}
+            <h3>{{ market }}市场</h3>
+            {# 图表用数据 #}
+            <blockquote>
+                {% for key in ['上市','成交','均价'] %}
+                    {{ key }}: <span class="badge">{{ detail[key][0] }}</span>&nbsp;&nbsp;
+                {% endfor %}
+            </blockquote>
+            {# 文字描述 #}
+            <p>
+                上周南京{{ market }}
+                {% if detail['上市'][0]=="0.00" %}
+                    无上市；
+                {% else %}
+                    上市{{ detail['上市'][0] }}万㎡，环比{{ detail['上市'][1] }}%；
+                {% endif %}
+
+                {% if detail['成交'][0]=="0.00" %}
+                    无成交。
+                {% else %}
+                    成交{{ detail['成交'][0] }}万㎡，环比{{ detail['成交'][1] }}%，
+                    成交均价{{ detail['均价'][0] }}元/㎡，环比{{ detail['均价'][1] }}%。
+                {% endif %}
+            </p>
+            <br>
+        {% endfor %}
+    </div>
+{% endblock %}
